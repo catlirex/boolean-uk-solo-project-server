@@ -1,5 +1,5 @@
 const { findUserWithValidation, createdWithHash } = require("./service");
-const { createToken } = require("../../utils/authGenerator");
+const { createToken, validateToken } = require("../../utils/authGenerator");
 
 const loginUser = async (req, res) => {
   const userCreds = req.body;
@@ -10,6 +10,7 @@ const loginUser = async (req, res) => {
     const token = createToken({
       id: loggedUser.id,
       email: loggedUser.email,
+      avatar: loggedUser.avatar,
     });
 
     res.cookie("token", token, { httpOnly: true });
@@ -18,12 +19,23 @@ const loginUser = async (req, res) => {
       user: {
         avatar: loggedUser.avatar,
         email: loggedUser.email,
+        avatar: loggedUser.avatar,
       },
       token: token,
     });
   } catch (error) {
     console.log(error);
     res.status(401).json({ error: "password/email incorrect" });
+  }
+};
+
+const loginCheck = async (req, res) => {
+  const token = req.cookies.token;
+  const userData = token && validateToken(token);
+  if (userData) {
+    res.json({ user: userData });
+  } else {
+    res.json({ user: null });
   }
 };
 
@@ -41,6 +53,7 @@ const createUser = async (req, res) => {
     const token = createToken({
       id: savedUser.id,
       email: savedUser.email,
+      avatar: savedUser.avatar,
     });
     res.cookie("token", token, { httpOnly: true });
 
@@ -57,4 +70,4 @@ const createUser = async (req, res) => {
   }
 };
 
-module.exports = { loginUser, logOutUser, createUser };
+module.exports = { loginUser, logOutUser, createUser, loginCheck };
