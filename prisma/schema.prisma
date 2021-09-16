@@ -12,8 +12,75 @@ generator client {
 }
 
 model User {
-  id       Int    @id @default(autoincrement())
-  email    String @unique
+  id       Int            @id @default(autoincrement())
+  email    String         @unique
   password String
-  avatar   String @default("https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fcdn.pixabay.com%2Fphoto%2F2016%2F08%2F08%2F09%2F17%2Favatar-1577909_960_720.png")
+  avatar   String         @default("https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fcdn.pixabay.com%2Fphoto%2F2016%2F08%2F08%2F09%2F17%2Favatar-1577909_960_720.png")
+  channel  Channel_User[]
+  post     Post[]
+  comments Comment[]
+  reply    Reply[]
+}
+
+model Channel {
+  id     String         @id @unique
+  name   String
+  about  String
+  image  String
+  avatar String
+  user   Channel_User[]
+  post   Post[]
+}
+
+enum Role {
+  owner
+  modurator
+  member
+}
+
+model Channel_User {
+  id        Int      @id @default(autoincrement())
+  joinDate  DateTime @default(now())
+  role      Role
+  channelId String
+  channel   Channel  @relation(fields: [channelId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    Int
+}
+
+model Post {
+  id        Int       @id @default(autoincrement())
+  title     String
+  content   String?
+  image     String?
+  video     String?
+  postDate  DateTime  @default(now())
+  vote      Int
+  pinned    Boolean
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    Int
+  channel   Channel   @relation(fields: [channelId], references: [id], onDelete: Cascade)
+  channelId String
+  comment   Comment[]
+}
+
+model Comment {
+  id          Int      @id @default(autoincrement())
+  content     String
+  vote        Int
+  commentDate DateTime @default(now())
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId      Int
+  post        Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+  postId      Int
+  reply       Reply[]
+}
+
+model Reply {
+  id        Int     @id @default(autoincrement())
+  content   String
+  Comment   Comment @relation(fields: [commentId], references: [id], onDelete: Cascade)
+  commentId Int
+  User      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    Int
 }
