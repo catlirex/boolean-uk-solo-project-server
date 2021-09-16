@@ -9,4 +9,8 @@ function createToken(payload) {
   return jwt.sign(payload, JWT_SECRET);
 }
 
-module.exports = { createToken };
+function validateToken(token) {
+  return jwt.verify(token, JWT_SECRET);
+}
+
+module.exports = { createToken, validateToken };

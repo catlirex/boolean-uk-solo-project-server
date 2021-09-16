@@ -3,6 +3,7 @@ require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
 const morgan = require("morgan");
+const loginAuth = require("./resources/middlewares/loginAuth");
 const authRouter = require("./resources/auth/router");
 const channelRouter = require("./resources/channel/router");
 
@@ -19,6 +20,7 @@ app.use(morgan("dev"));
 
 /* SETUP ROUTES */
 app.use(authRouter);
+app.use(loginAuth);
 app.use("/channel", channelRouter);
 
 app.get("*", (req, res) => {
