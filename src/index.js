@@ -4,6 +4,7 @@ const express = require("express");
 const cors = require("cors");
 const morgan = require("morgan");
 const authRouter = require("./resources/auth/router");
+const channelRouter = require("./resources/channel/router");
 
 const app = express();
 
@@ -18,6 +19,7 @@ app.use(morgan("dev"));
 
 /* SETUP ROUTES */
 app.use(authRouter);
+app.use("/channel", channelRouter);
 
 app.get("*", (req, res) => {
   res.json({ ok: true });
