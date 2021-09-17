@@ -1,4 +1,5 @@
 const { saveChannel } = require("./service");
+const dbClient = require("../../utils/database");
 
 const createChannel = async (req, res) => {
   const newChannel = req.body;

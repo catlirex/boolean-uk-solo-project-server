@@ -1,10 +1,8 @@
 const { validateToken } = require("../../utils/authGenerator");
 
 function loginAuth(req, res, next) {
-  //   const token = req.cookies.token;
-  //   const userData = token && validateToken(token);
-  //   console.log(userData);
-  const userData = { id: 1 };
+  const token = req.cookies.token;
+  const userData = token && validateToken(token);
   if (userData) {
     req.currentUser = userData;
     next();

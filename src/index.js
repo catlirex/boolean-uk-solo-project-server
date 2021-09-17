@@ -6,19 +6,13 @@ const morgan = require("morgan");
 const loginAuth = require("./resources/middlewares/loginAuth");
 const authRouter = require("./resources/auth/router");
 const channelRouter = require("./resources/channel/router");
+const userRouter = require("./resources/user/router");
 
 const app = express();
 
 /* SETUP MIDDLEWARE */
 
 app.disable("x-powered-by");
-
-app.use(cors());
-app.use(cookieParser());
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-app.use(morgan("dev"));
-
 app.use(function (req, res, next) {
   res.setHeader("Access-Control-Allow-Origin", "http://localhost:3000");
   next();
@@ -27,10 +21,17 @@ app.use(function (req, res, next) {
   res.setHeader("Access-Control-Allow-Credentials", "true");
   next();
 });
+app.use(cors({ origin: "http://localhost:3000", credentials: true }));
+app.use(cookieParser());
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(morgan("dev"));
+
 /* SETUP ROUTES */
 app.use(authRouter);
-// app.use(loginAuth);
+
 app.use("/channel", channelRouter);
+app.use("/user", userRouter);
 
 app.get("*", (req, res) => {
   res.json({ ok: true });
