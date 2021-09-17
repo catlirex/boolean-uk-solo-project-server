@@ -1,4 +1,4 @@
-const { saveChannel } = require("./service");
+const { saveChannel, findChannel } = require("./service");
 const dbClient = require("../../utils/database");
 
 const createChannel = async (req, res) => {
@@ -12,4 +12,15 @@ const createChannel = async (req, res) => {
     res.status(401).json({ error: "Channel id existed" });
   }
 };
-module.exports = { createChannel };
+
+const getChannelDetails = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const channelDetail = await findChannel(id);
+    res.json(channelDetail);
+  } catch (e) {
+    console.log(e);
+    res.status(501).json({ error: "Channel doesn't exits" });
+  }
+};
+module.exports = { createChannel, getChannelDetails };

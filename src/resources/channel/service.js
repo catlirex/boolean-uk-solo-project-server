@@ -15,4 +15,17 @@ const saveChannel = async (channelData, userId) => {
   }
 };
 
-module.exports = { saveChannel };
+const findChannel = async (id) => {
+  try {
+    const result = dbClient.channel.findUnique({
+      where: { id },
+      include: { _count: { select: { post: true, user: true } } },
+    });
+    return result;
+  } catch (e) {
+    console.log(e);
+    throw new Error("Channel doesn't existed");
+  }
+};
+
+module.exports = { saveChannel, findChannel };
