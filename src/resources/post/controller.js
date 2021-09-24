@@ -1,4 +1,4 @@
-const { savePost } = require("./service");
+const { savePost, findSortedPost } = require("./service");
 
 const createPost = async (req, res) => {
   const newPost = req.body;
@@ -13,6 +13,16 @@ const createPost = async (req, res) => {
   }
 };
 const getAllPost = async (req, res) => {};
-const getPostForOneChannel = async (req, res) => {};
+const getPostForOneChannel = async (req, res) => {
+  const { channelId } = req.params;
+  const { sort } = req.query;
+  try {
+    const postList = await findSortedPost(channelId, sort);
+    res.json(postList);
+  } catch (e) {
+    console.log(e);
+    res.status(501).json({ error: "internal server error" });
+  }
+};
 
 module.exports = { createPost, getAllPost, getPostForOneChannel };

@@ -17,7 +17,7 @@ const saveChannel = async (channelData, userId) => {
 
 const findChannel = async (id) => {
   try {
-    const result = dbClient.channel.findUnique({
+    const result = await dbClient.channel.findUnique({
       where: { id },
       include: { _count: { select: { post: true, user: true } } },
     });

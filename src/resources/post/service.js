@@ -17,4 +17,37 @@ const savePost = async (postData, userId) => {
   }
 };
 
-module.exports = { savePost };
+const findSortedPost = async (id, sort) => {
+  try {
+    let result = null;
+    if (sort === "new")
+      result = await dbClient.post.findMany({
+        where: { channelId: id },
+        orderBy: [{ postDate: "desc" }],
+        include: { _count: { select: { comment: true } } },
+      });
+    if (sort === "vote")
+      result = await dbClient.post.findMany({
+        where: { channelId: id },
+        orderBy: [{ vote: "desc" }],
+        include: { _count: { select: { comment: true } } },
+      });
+    if (sort === "hot")
+      result = await dbClient.post.findMany({
+        where: { channelId: id },
+        orderBy: [{ comment: { _count: "desc" } }],
+        include: { _count: { select: { comment: true } } },
+      });
+    if (!sort)
+      result = await dbClient.post.findMany({
+        where: { channelId: id },
+        include: { _count: { select: { comment: true } } },
+      });
+    return result;
+  } catch (e) {
+    console.log(e);
+    throw new Error("Internal server error");
+  }
+};
+
+module.exports = { savePost, findSortedPost };

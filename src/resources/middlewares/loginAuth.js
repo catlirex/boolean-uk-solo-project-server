@@ -2,7 +2,9 @@ const { validateToken } = require("../../utils/authGenerator");
 
 function loginAuth(req, res, next) {
   const token = req.cookies.token;
+  console.log("token", token);
   const userData = token && validateToken(token);
+  console.log("userData", userData);
   if (userData) {
     req.currentUser = userData;
     next();
