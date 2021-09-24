@@ -55,8 +55,8 @@ model Post {
   image     String?
   video     String?
   postDate  DateTime  @default(now())
-  vote      Int
-  pinned    Boolean
+  vote      Int       @default(0)
+  pinned    Boolean   @default(false)
   user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId    Int
   channel   Channel   @relation(fields: [channelId], references: [id], onDelete: Cascade)
