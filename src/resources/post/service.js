@@ -64,7 +64,7 @@ const findSortedPost = async (id, sort) => {
 
 const findOnePost = async (id) => {
   try {
-    const result = await dbClient.post.findUnique({
+    const result = await dbClient.post.findMany({
       where: { id },
       include: {
         _count: { select: { comment: true } },
@@ -91,4 +91,27 @@ const patchPost = async (id, toUpdatePost) => {
   }
 };
 
-module.exports = { savePost, findSortedPost, findOnePost, patchPost };
+const findTopPosts = async () => {
+  try {
+    const result = await dbClient.post.findMany({
+      orderBy: [{ vote: "desc" }],
+      include: {
+        _count: { select: { comment: true } },
+        user: { select: { avatar: true, email: true } },
+      },
+      take: 10,
+    });
+    return result;
+  } catch (e) {
+    console.log(e);
+    throw new Error("internal server error");
+  }
+};
+
+module.exports = {
+  savePost,
+  findSortedPost,
+  findOnePost,
+  patchPost,
+  findTopPosts,
+};

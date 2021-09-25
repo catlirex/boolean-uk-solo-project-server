@@ -3,6 +3,7 @@ const {
   findSortedPost,
   findOnePost,
   patchPost,
+  findTopPosts,
 } = require("./service");
 
 const createPost = async (req, res) => {
@@ -44,5 +45,14 @@ const updatePost = async (req, res) => {
   }
 };
 
-const getAllPost = async (req, res) => {};
+const getAllPost = async (req, res) => {
+  try {
+    const topPosts = await findTopPosts();
+
+    res.json(topPosts);
+  } catch (e) {
+    console.log(e);
+    res.status(400).json({ error: "internal server error" });
+  }
+};
 module.exports = { createPost, getAllPost, getPostForOneChannel, updatePost };
