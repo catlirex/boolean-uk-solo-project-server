@@ -9,7 +9,20 @@ const findChannelList = async (id) => {
     return result;
   } catch (e) {
     console.log(e);
+    throw new Error("internal server error");
   }
 };
 
-module.exports = { findChannelList };
+const findConnection = async (userId, channelId) => {
+  try {
+    const result = await dbClient.channel_User.findMany({
+      where: { userId, channelId },
+    });
+    return result;
+  } catch (e) {
+    console.log(e);
+    throw new Error("internal server error");
+  }
+};
+
+module.exports = { findChannelList, findConnection };
