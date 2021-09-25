@@ -24,24 +24,36 @@ const findSortedPost = async (id, sort) => {
       result = await dbClient.post.findMany({
         where: { channelId: id },
         orderBy: [{ postDate: "desc" }],
-        include: { _count: { select: { comment: true } } },
+        include: {
+          _count: { select: { comment: true } },
+          user: { select: { avatar: true, email: true } },
+        },
       });
     if (sort === "vote")
       result = await dbClient.post.findMany({
         where: { channelId: id },
         orderBy: [{ vote: "desc" }],
-        include: { _count: { select: { comment: true } } },
+        include: {
+          _count: { select: { comment: true } },
+          user: { select: { avatar: true, email: true } },
+        },
       });
     if (sort === "hot")
       result = await dbClient.post.findMany({
         where: { channelId: id },
         orderBy: [{ comment: { _count: "desc" } }],
-        include: { _count: { select: { comment: true } } },
+        include: {
+          _count: { select: { comment: true } },
+          user: { select: { avatar: true, email: true } },
+        },
       });
     if (!sort)
       result = await dbClient.post.findMany({
         where: { channelId: id },
-        include: { _count: { select: { comment: true } } },
+        include: {
+          _count: { select: { comment: true } },
+          user: { select: { avatar: true, email: true } },
+        },
       });
     return result;
   } catch (e) {
