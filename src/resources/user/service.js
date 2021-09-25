@@ -25,4 +25,22 @@ const findConnection = async (userId, channelId) => {
   }
 };
 
-module.exports = { findChannelList, findConnection };
+const connectUserChannel = async (userId, channelId, extraData) => {
+  const data = {
+    channel: { connect: { id: channelId } },
+    user: { connect: { id: userId } },
+  };
+  if (extraData.role) data.role = extraData.role;
+  try {
+    const result = await dbClient.channel_User.create({
+      data,
+    });
+
+    return result;
+  } catch (e) {
+    console.log(e);
+    throw new Error("internal server error");
+  }
+};
+
+module.exports = { findChannelList, findConnection, connectUserChannel };

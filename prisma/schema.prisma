@@ -41,7 +41,7 @@ enum Role {
 model Channel_User {
   id        Int      @id @default(autoincrement())
   joinDate  DateTime @default(now())
-  role      Role
+  role      Role     @default(member)
   channelId String
   channel   Channel  @relation(fields: [channelId], references: [id], onDelete: Cascade)
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
