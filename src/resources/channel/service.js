@@ -28,4 +28,17 @@ const findChannel = async (id) => {
   }
 };
 
-module.exports = { saveChannel, findChannel };
+const findTopChannels = async () => {
+  try {
+    const result = await dbClient.channel.findMany({
+      orderBy: [{ post: { _count: "desc" } }],
+      include: { _count: { select: { post: true, user: true } } },
+    });
+    return result;
+  } catch (e) {
+    console.log(e);
+    throw new Error("Channel doesn't existed");
+  }
+};
+
+module.exports = { saveChannel, findChannel, findTopChannels };

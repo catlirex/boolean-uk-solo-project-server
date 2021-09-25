@@ -1,4 +1,4 @@
-const { saveChannel, findChannel } = require("./service");
+const { saveChannel, findChannel, findTopChannels } = require("./service");
 const dbClient = require("../../utils/database");
 
 const createChannel = async (req, res) => {
@@ -23,4 +23,14 @@ const getChannelDetails = async (req, res) => {
     res.status(501).json({ error: "Channel doesn't exits" });
   }
 };
-module.exports = { createChannel, getChannelDetails };
+
+const createTopTenChannels = async (req, res) => {
+  try {
+    const topList = await findTopChannels();
+    res.json(topList);
+  } catch (e) {
+    console.log(e);
+    res.status(501).json({ error: "internal server error" });
+  }
+};
+module.exports = { createChannel, getChannelDetails, createTopTenChannels };
