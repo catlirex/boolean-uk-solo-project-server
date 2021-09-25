@@ -43,4 +43,22 @@ const connectUserChannel = async (userId, channelId, extraData) => {
   }
 };
 
-module.exports = { findChannelList, findConnection, connectUserChannel };
+const delConnection = async (id) => {
+  try {
+    const result = await dbClient.channel_User.delete({
+      where: { id },
+    });
+
+    return result;
+  } catch (e) {
+    console.log(e);
+    throw new Error("internal server error");
+  }
+};
+
+module.exports = {
+  findChannelList,
+  findConnection,
+  connectUserChannel,
+  delConnection,
+};

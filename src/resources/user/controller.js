@@ -2,6 +2,7 @@ const {
   findChannelList,
   findConnection,
   connectUserChannel,
+  delConnection,
 } = require("./service");
 
 const getUserChannel = async (req, res) => {
@@ -34,7 +35,11 @@ const joinChannel = async (req, res) => {
   const { channelId } = req.params;
   const extraData = req.body;
   try {
-    const newConnection = connectUserChannel(user.id, channelId, extraData);
+    const newConnection = await connectUserChannel(
+      user.id,
+      channelId,
+      extraData
+    );
     res.json(newConnection);
   } catch (e) {
     console.log(e);
@@ -42,4 +47,21 @@ const joinChannel = async (req, res) => {
   }
 };
 
-module.exports = { getUserChannel, getOneUserChannelConnection, joinChannel };
+const leaveChannel = async (req, res) => {
+  const user = req.currentUser;
+  const { channelId } = req.params;
+  try {
+    const toDeleteItem = await findConnection(user.id, channelId);
+    const deletedItem = await delConnection(toDeleteItem[0].id);
+    res.json(deletedItem);
+  } catch (e) {
+    console.log(e);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+module.exports = {
+  getUserChannel,
+  getOneUserChannelConnection,
+  joinChannel,
+  leaveChannel,
+};
