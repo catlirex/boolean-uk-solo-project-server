@@ -1,4 +1,9 @@
-const { savePost, findSortedPost } = require("./service");
+const {
+  savePost,
+  findSortedPost,
+  findOnePost,
+  patchPost,
+} = require("./service");
 
 const createPost = async (req, res) => {
   const newPost = req.body;
@@ -6,13 +11,14 @@ const createPost = async (req, res) => {
 
   try {
     const createdPost = await savePost(newPost, user.id);
-    res.json(createdPost);
+    const newPostWithDetail = await findOnePost(createdPost.id);
+    res.json(newPostWithDetail);
   } catch (e) {
     console.log(e);
     res.status(400).json({ error: "Missing Post Title" });
   }
 };
-const getAllPost = async (req, res) => {};
+
 const getPostForOneChannel = async (req, res) => {
   const { channelId } = req.params;
   const { sort } = req.query;
@@ -25,4 +31,18 @@ const getPostForOneChannel = async (req, res) => {
   }
 };
 
-module.exports = { createPost, getAllPost, getPostForOneChannel };
+const updatePost = async (req, res) => {
+  const { postId } = req.params;
+  const toUpdatePost = req.body;
+  try {
+    const updatedPost = await patchPost(postId, toUpdatePost);
+    const updatePostWithDetail = await findOnePost(updatedPost.id);
+    res.json(updatePostWithDetail);
+  } catch (e) {
+    console.log(e);
+    res.status(400).json({ error: "Fail to update" });
+  }
+};
+
+const getAllPost = async (req, res) => {};
+module.exports = { createPost, getAllPost, getPostForOneChannel, updatePost };

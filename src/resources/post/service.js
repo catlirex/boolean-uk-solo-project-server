@@ -62,4 +62,33 @@ const findSortedPost = async (id, sort) => {
   }
 };
 
-module.exports = { savePost, findSortedPost };
+const findOnePost = async (id) => {
+  try {
+    const result = await dbClient.post.findUnique({
+      where: { id },
+      include: {
+        _count: { select: { comment: true } },
+        user: { select: { avatar: true, email: true } },
+      },
+    });
+    return result;
+  } catch (e) {
+    console.log(e);
+    throw new Error("post not found");
+  }
+};
+
+const patchPost = async (id, toUpdatePost) => {
+  try {
+    const updated = await dbClient.post.update({
+      where: { id: parseInt(id) },
+      data: { ...toUpdatePost },
+    });
+    return updated;
+  } catch (e) {
+    console.log(e);
+    throw new Error("Fail to update");
+  }
+};
+
+module.exports = { savePost, findSortedPost, findOnePost, patchPost };
