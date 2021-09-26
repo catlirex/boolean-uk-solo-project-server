@@ -5,6 +5,7 @@ const {
   patchPost,
   findTopPosts,
   findPostDetail,
+  createComment,
 } = require("./service");
 
 const createPost = async (req, res) => {
@@ -65,7 +66,24 @@ const getPostDetail = async (req, res) => {
     res.json(postDetail);
   } catch (e) {
     console.log(e);
-    res.status(400).json({ error: "internal server error" });
+    res.status(500).json({ error: "internal server error" });
+  }
+};
+
+const postNewComment = async (req, res) => {
+  const { postId } = req.params;
+  const user = req.currentUser;
+  const newComment = req.body;
+  try {
+    const createdComment = await createComment(
+      user.id,
+      parseInt(postId),
+      newComment
+    );
+    res.json(createdComment);
+  } catch (e) {
+    console.log(e);
+    res.status(500).json({ error: "internal server error" });
   }
 };
 module.exports = {
@@ -74,4 +92,5 @@ module.exports = {
   getPostForOneChannel,
   updatePost,
   getPostDetail,
+  postNewComment,
 };

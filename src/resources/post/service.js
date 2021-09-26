@@ -132,6 +132,22 @@ const findPostDetail = async (id) => {
   }
 };
 
+const createComment = async (userId, postId, comment) => {
+  try {
+    const createdPost = await dbClient.comment.create({
+      data: {
+        content: comment.content,
+        user: { connect: { id: userId } },
+        post: { connect: { id: postId } },
+      },
+    });
+    return createdPost;
+  } catch (e) {
+    console.log(e);
+    throw new Error("Missing Title");
+  }
+};
+
 module.exports = {
   savePost,
   findSortedPost,
@@ -139,4 +155,5 @@ module.exports = {
   patchPost,
   findTopPosts,
   findPostDetail,
+  createComment,
 };
