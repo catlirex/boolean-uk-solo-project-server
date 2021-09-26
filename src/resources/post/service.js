@@ -62,22 +62,6 @@ const findSortedPost = async (id, sort) => {
   }
 };
 
-const findOnePost = async (id) => {
-  try {
-    const result = await dbClient.post.findMany({
-      where: { id },
-      include: {
-        _count: { select: { comment: true } },
-        user: { select: { avatar: true, email: true } },
-      },
-    });
-    return result;
-  } catch (e) {
-    console.log(e);
-    throw new Error("post not found");
-  }
-};
-
 const patchPost = async (id, toUpdatePost) => {
   try {
     const updated = await dbClient.post.update({
@@ -167,7 +151,6 @@ const createReply = async (userId, commentId, reply) => {
 module.exports = {
   savePost,
   findSortedPost,
-  findOnePost,
   patchPost,
   findTopPosts,
   findPostDetail,

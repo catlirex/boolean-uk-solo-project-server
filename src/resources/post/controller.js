@@ -1,7 +1,6 @@
 const {
   savePost,
   findSortedPost,
-  findOnePost,
   patchPost,
   findTopPosts,
   findPostDetail,
@@ -15,7 +14,7 @@ const createPost = async (req, res) => {
 
   try {
     const createdPost = await savePost(newPost, user.id);
-    const newPostWithDetail = await findOnePost(createdPost.id);
+    const newPostWithDetail = await findPostDetail(createdPost.id);
     res.json(newPostWithDetail);
   } catch (e) {
     console.log(e);
@@ -40,7 +39,7 @@ const updatePost = async (req, res) => {
   const toUpdatePost = req.body;
   try {
     const updatedPost = await patchPost(postId, toUpdatePost);
-    const updatePostWithDetail = await findOnePost(updatedPost.id);
+    const updatePostWithDetail = await findPostDetail(updatedPost.id);
     res.json(updatePostWithDetail);
   } catch (e) {
     console.log(e);
