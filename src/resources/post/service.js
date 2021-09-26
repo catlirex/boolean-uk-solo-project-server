@@ -108,10 +108,35 @@ const findTopPosts = async () => {
   }
 };
 
+const findPostDetail = async (id) => {
+  try {
+    const result = await dbClient.post.findUnique({
+      where: { id },
+      include: {
+        _count: { select: { comment: true } },
+        user: { select: { avatar: true, email: true } },
+        comment: {
+          include: {
+            user: { select: { avatar: true, email: true } },
+            reply: {
+              include: { User: { select: { avatar: true, email: true } } },
+            },
+          },
+        },
+      },
+    });
+    return result;
+  } catch (e) {
+    console.log(e);
+    throw new Error("post not found");
+  }
+};
+
 module.exports = {
   savePost,
   findSortedPost,
   findOnePost,
   patchPost,
   findTopPosts,
+  findPostDetail,
 };
