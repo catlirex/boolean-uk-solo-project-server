@@ -79,8 +79,8 @@ model Comment {
 model Reply {
   id        Int     @id @default(autoincrement())
   content   String
-  Comment   Comment @relation(fields: [commentId], references: [id], onDelete: Cascade)
+  comment   Comment @relation(fields: [commentId], references: [id], onDelete: Cascade)
   commentId Int
-  User      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId    Int
 }

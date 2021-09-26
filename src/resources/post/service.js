@@ -119,7 +119,7 @@ const findPostDetail = async (id) => {
           include: {
             user: { select: { avatar: true, email: true } },
             reply: {
-              include: { User: { select: { avatar: true, email: true } } },
+              include: { user: { select: { avatar: true, email: true } } },
             },
           },
         },
@@ -153,7 +153,7 @@ const createReply = async (userId, commentId, reply) => {
     const createdPost = await dbClient.reply.create({
       data: {
         content: reply.content,
-        User: { connect: { id: userId } },
+        user: { connect: { id: userId } },
         Comment: { connect: { id: commentId } },
       },
     });
