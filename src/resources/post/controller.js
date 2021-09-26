@@ -6,6 +6,7 @@ const {
   findTopPosts,
   findPostDetail,
   createComment,
+  createReply,
 } = require("./service");
 
 const createPost = async (req, res) => {
@@ -86,6 +87,24 @@ const postNewComment = async (req, res) => {
     res.status(500).json({ error: "internal server error" });
   }
 };
+
+const postNewReply = async (req, res) => {
+  const { commentId } = req.params;
+  const user = req.currentUser;
+  const newReply = req.body;
+
+  try {
+    const createdReply = await createReply(
+      user.id,
+      parseInt(commentId),
+      newReply
+    );
+    res.json(createdReply);
+  } catch (e) {
+    console.log(e);
+    res.status(500).json({ error: "internal server error" });
+  }
+};
 module.exports = {
   createPost,
   getAllPost,
@@ -93,4 +112,5 @@ module.exports = {
   updatePost,
   getPostDetail,
   postNewComment,
+  postNewReply,
 };

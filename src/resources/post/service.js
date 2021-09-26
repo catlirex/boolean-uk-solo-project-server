@@ -144,7 +144,23 @@ const createComment = async (userId, postId, comment) => {
     return createdPost;
   } catch (e) {
     console.log(e);
-    throw new Error("Missing Title");
+    throw new Error("internal server error");
+  }
+};
+
+const createReply = async (userId, commentId, reply) => {
+  try {
+    const createdPost = await dbClient.reply.create({
+      data: {
+        content: reply.content,
+        User: { connect: { id: userId } },
+        Comment: { connect: { id: commentId } },
+      },
+    });
+    return createdPost;
+  } catch (e) {
+    console.log(e);
+    throw new Error("internal server error");
   }
 };
 
@@ -156,4 +172,5 @@ module.exports = {
   findTopPosts,
   findPostDetail,
   createComment,
+  createReply,
 };

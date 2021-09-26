@@ -54,7 +54,7 @@ model Post {
   content   String?
   image     String?
   video     String?
-  postDate  DateTime  @default(now())
+  date      DateTime  @default(now())
   vote      Int       @default(0)
   pinned    Boolean   @default(false)
   user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -65,15 +65,15 @@ model Post {
 }
 
 model Comment {
-  id          Int      @id @default(autoincrement())
-  content     String
-  vote        Int      @default(0)
-  commentDate DateTime @default(now())
-  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId      Int
-  post        Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
-  postId      Int
-  reply       Reply[]
+  id      Int      @id @default(autoincrement())
+  content String
+  vote    Int      @default(0)
+  date    DateTime @default(now())
+  user    User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId  Int
+  post    Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+  postId  Int
+  reply   Reply[]
 }
 
 model Reply {
