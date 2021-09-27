@@ -41,4 +41,16 @@ const findTopChannels = async () => {
   }
 };
 
-module.exports = { saveChannel, findChannel, findTopChannels };
+const removeChannel = async (channelId) => {
+  try {
+    const result = await dbClient.channel.delete({
+      where: { id: channelId },
+    });
+    return result;
+  } catch (e) {
+    console.log(e);
+    throw new Error("Internal server error");
+  }
+};
+
+module.exports = { saveChannel, findChannel, findTopChannels, removeChannel };

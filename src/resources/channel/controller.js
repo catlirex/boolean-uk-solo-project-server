@@ -1,5 +1,11 @@
-const { saveChannel, findChannel, findTopChannels } = require("./service");
+const {
+  saveChannel,
+  findChannel,
+  findTopChannels,
+  removeChannel,
+} = require("./service");
 const dbClient = require("../../utils/database");
+const { findConnection } = require("../user/service");
 
 const createChannel = async (req, res) => {
   const newChannel = req.body;
@@ -7,7 +13,9 @@ const createChannel = async (req, res) => {
 
   try {
     const createdChannel = await saveChannel(newChannel, user.id);
-    res.json(createdChannel);
+
+    const channelDetail = await findChannel(createdChannel.id);
+    res.json(channelDetail);
   } catch (e) {
     res.status(401).json({ error: "Channel id existed" });
   }
@@ -33,4 +41,26 @@ const createTopTenChannels = async (req, res) => {
     res.status(501).json({ error: "internal server error" });
   }
 };
-module.exports = { createChannel, getChannelDetails, createTopTenChannels };
+
+const delChannel = async (req, res) => {
+  const channelId = req.params.id;
+  const user = req.currentUser;
+
+  try {
+    const getRole = await findConnection(user.id, channelId);
+    const isOwner = getRole[0].role === "owner";
+    if (!isOwner) return res.status(401).json({ error: "not channel owner" });
+
+    const removedChannel = await removeChannel(channelId);
+    res.json(removedChannel);
+  } catch (e) {
+    console.log(e);
+    res.status(501).json({ error: "internal server error" });
+  }
+};
+module.exports = {
+  createChannel,
+  getChannelDetails,
+  createTopTenChannels,
+  delChannel,
+};
