@@ -164,6 +164,18 @@ const createReply = async (userId, commentId, reply) => {
   }
 };
 
+const removePost = async (id) => {
+  try {
+    const delPost = await dbClient.post.delete({
+      where: { id },
+    });
+    return delPost;
+  } catch (e) {
+    console.log(e);
+    throw new Error("internal server error");
+  }
+};
+
 module.exports = {
   savePost,
   findSortedPost,
@@ -172,4 +184,5 @@ module.exports = {
   findPostDetail,
   createComment,
   createReply,
+  removePost,
 };

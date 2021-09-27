@@ -6,6 +6,7 @@ const {
   findPostDetail,
   createComment,
   createReply,
+  removePost,
 } = require("./service");
 
 const createPost = async (req, res) => {
@@ -104,6 +105,22 @@ const postNewReply = async (req, res) => {
     res.status(500).json({ error: "internal server error" });
   }
 };
+
+const deletePost = async (req, res) => {
+  const { postId } = req.params;
+  const user = req.currentUser;
+  try {
+    const toDelPost = await findPostDetail(parseInt(postId));
+    if (toDelPost.userId !== user.id)
+      return res.status(401).json({ error: "you are not post owner" });
+    const deletedPost = await removePost(toDelPost.id);
+    return res.json(deletedPost);
+  } catch (e) {
+    console.log(e);
+    res.status(500).json({ error: "internal server error" });
+  }
+};
+
 module.exports = {
   createPost,
   getAllPost,
@@ -112,4 +129,5 @@ module.exports = {
   getPostDetail,
   postNewComment,
   postNewReply,
+  deletePost,
 };

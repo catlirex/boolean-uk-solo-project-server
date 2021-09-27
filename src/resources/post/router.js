@@ -8,6 +8,7 @@ const {
   getPostDetail,
   postNewComment,
   postNewReply,
+  deletePost,
 } = require("./controller");
 
 const postRouter = Router();
@@ -19,5 +20,6 @@ postRouter.route("/:commentId/newReply").post(loginAuth, postNewReply);
 postRouter.route("/:postId/newComment").post(loginAuth, postNewComment);
 postRouter.route("/:postId").patch(loginAuth, updatePost);
 postRouter.route("/:postId").get(getPostDetail);
+postRouter.route("/:postId").delete(loginAuth, deletePost);
 
 module.exports = postRouter;
