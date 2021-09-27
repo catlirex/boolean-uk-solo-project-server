@@ -23,7 +23,7 @@ const findSortedPost = async (id, sort) => {
     if (sort === "new")
       result = await dbClient.post.findMany({
         where: { channelId: id },
-        orderBy: [{ postDate: "desc" }],
+        orderBy: [{ date: "desc" }],
         include: {
           _count: { select: { comment: true } },
           user: { select: { avatar: true, email: true } },
