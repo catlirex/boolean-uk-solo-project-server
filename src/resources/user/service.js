@@ -64,6 +64,7 @@ const findAllPosts = async (id) => {
         _count: { select: { comment: true } },
         user: { select: { avatar: true, email: true } },
       },
+      orderBy: { date: "desc" },
     });
 
     return result;
