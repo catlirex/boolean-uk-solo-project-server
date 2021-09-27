@@ -5,6 +5,7 @@ const {
   getOneUserChannelConnection,
   joinChannel,
   leaveChannel,
+  getUserPosts,
 } = require("./controller");
 
 const userRouter = Router();
@@ -15,5 +16,6 @@ userRouter
 
 userRouter.route("/:channelId/joinChannel").post(loginAuth, joinChannel);
 userRouter.route("/:channelId/leaveChannel").delete(loginAuth, leaveChannel);
+userRouter.route("/myPost").get(loginAuth, getUserPosts);
 
 module.exports = userRouter;

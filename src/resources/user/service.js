@@ -56,9 +56,27 @@ const delConnection = async (id) => {
   }
 };
 
+const findAllPosts = async (id) => {
+  try {
+    const result = await dbClient.post.findMany({
+      where: { userId: id },
+      include: {
+        _count: { select: { comment: true } },
+        user: { select: { avatar: true, email: true } },
+      },
+    });
+
+    return result;
+  } catch (e) {
+    console.log(e);
+    throw new Error("internal server error");
+  }
+};
+
 module.exports = {
   findChannelList,
   findConnection,
   connectUserChannel,
   delConnection,
+  findAllPosts,
 };

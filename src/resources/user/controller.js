@@ -3,6 +3,7 @@ const {
   findConnection,
   connectUserChannel,
   delConnection,
+  findAllPosts,
 } = require("./service");
 
 const getUserChannel = async (req, res) => {
@@ -59,9 +60,21 @@ const leaveChannel = async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 };
+
+const getUserPosts = async (req, res) => {
+  const user = req.currentUser;
+  try {
+    const postsList = await findAllPosts(user.id);
+    res.json(postsList);
+  } catch (e) {
+    console.log(e);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
 module.exports = {
   getUserChannel,
   getOneUserChannelConnection,
   joinChannel,
   leaveChannel,
+  getUserPosts,
 };
