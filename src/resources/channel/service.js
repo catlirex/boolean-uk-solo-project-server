@@ -31,7 +31,7 @@ const findChannel = async (id) => {
 const findTopChannels = async () => {
   try {
     const result = await dbClient.channel.findMany({
-      orderBy: [{ post: { _count: "desc" } }],
+      orderBy: [{ post: { _count: "desc" } }, { user: { _count: "desc" } }],
       include: { _count: { select: { post: true, user: true } } },
     });
     return result;

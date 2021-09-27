@@ -23,7 +23,11 @@ const findSortedPost = async (id, sort) => {
     if (sort === "new")
       result = await dbClient.post.findMany({
         where: { channelId: id },
-        orderBy: [{ date: "desc" }],
+        orderBy: [
+          { date: "desc" },
+          { vote: "desc" },
+          { comment: { _count: "desc" } },
+        ],
         include: {
           _count: { select: { comment: true } },
           user: { select: { avatar: true, email: true } },
@@ -32,7 +36,11 @@ const findSortedPost = async (id, sort) => {
     if (sort === "vote")
       result = await dbClient.post.findMany({
         where: { channelId: id },
-        orderBy: [{ vote: "desc" }],
+        orderBy: [
+          { vote: "desc" },
+          { comment: { _count: "desc" } },
+          { date: "desc" },
+        ],
         include: {
           _count: { select: { comment: true } },
           user: { select: { avatar: true, email: true } },
@@ -41,7 +49,11 @@ const findSortedPost = async (id, sort) => {
     if (sort === "hot")
       result = await dbClient.post.findMany({
         where: { channelId: id },
-        orderBy: [{ comment: { _count: "desc" } }],
+        orderBy: [
+          { comment: { _count: "desc" } },
+          { vote: "desc" },
+          { date: "desc" },
+        ],
         include: {
           _count: { select: { comment: true } },
           user: { select: { avatar: true, email: true } },
@@ -78,7 +90,11 @@ const patchPost = async (id, toUpdatePost) => {
 const findTopPosts = async () => {
   try {
     const result = await dbClient.post.findMany({
-      orderBy: [{ vote: "desc" }],
+      orderBy: [
+        { vote: "desc" },
+        { comment: { _count: "desc" } },
+        { date: "desc" },
+      ],
       include: {
         _count: { select: { comment: true } },
         user: { select: { avatar: true, email: true } },
