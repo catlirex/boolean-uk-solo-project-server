@@ -81,7 +81,9 @@ const postNewComment = async (req, res) => {
       parseInt(postId),
       newComment
     );
-    res.json(createdComment);
+
+    const updatedPostDetail = await findPostDetail(createdComment.postId);
+    res.json(updatedPostDetail);
   } catch (e) {
     console.log(e);
     res.status(500).json({ error: "internal server error" });

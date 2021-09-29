@@ -126,6 +126,11 @@ const findPostDetail = async (id) => {
               include: { user: { select: { avatar: true, email: true } } },
             },
           },
+          orderBy: [
+            { vote: "desc" },
+            { reply: { _count: "desc" } },
+            { date: "desc" },
+          ],
         },
       },
     });
@@ -158,7 +163,7 @@ const createReply = async (userId, commentId, reply) => {
       data: {
         content: reply.content,
         user: { connect: { id: userId } },
-        Comment: { connect: { id: commentId } },
+        comment: { connect: { id: commentId } },
       },
     });
     return createdPost;
